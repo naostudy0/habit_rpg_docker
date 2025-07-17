@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  habit_rpg_container:
+    build:
+      context: ./backend
+    container_name: habit_rpg_container
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend/html:/var/www/html:cached
+      - ./llm/logs:/llm-logs
+    depends_on:
+      - mysql
+      - ollama
+    environment:
+      DB_HOST: mysql
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: ${PMA_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    depends_on:
+      - mysql
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama_container
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    tty: true
+
+volumes:
+  mysql-data:
+  ollama-data:

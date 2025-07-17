@@ -1,0 +1,8 @@
+*
+!.gitignore
+!Dockerfile
+!apache
+!apache/*
+!html
+html/*
+!html/.gitkeep
