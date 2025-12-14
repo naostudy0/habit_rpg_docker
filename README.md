@@ -9,7 +9,7 @@ Laravel、Flutterの利用を想定しており、MySQL、phpMyAdmin、Ollama（
 
 - **バックエンド**: Laravel 12（API サーバー）
 - **フロントエンド**: Flutter（モバイルアプリ）
-- **LLM連携**: Ollama（ローカル LLM API、モデルは Llama3 または Nous Hermes2）
+- **LLM連携**: Ollama（ローカル LLM API、モデルは Llama3 を想定）
 - **インフラ**: Docker + Apache + MySQL + PHP + phpMyAdmin
 
 ## ディレクトリ構成
@@ -34,22 +34,22 @@ habit_rpg_docker/
 
 ### 1. `.env` の作成（Docker 用）
 
-プロジェクトルート直下の`.env.example` をコピーして `.env` ファイルを作成し、以下の内容を記載します。
+プロジェクトルート直下の`.env.example` をコピーして `.env` ファイルを作成します。
 
-```dotenv
-# MySQL
-DB_PORT=3306
-DB_DATABASE=laravel
-DB_USERNAME=root
-DB_PASSWORD=
-
-MYSQL_ROOT_PASSWORD=password
-MYSQL_DATABASE=laravel
-
-# phpMyAdmin
-PMA_PORT=3306
+```bash
+cp .env.example .env
 ```
-この .env は docker-compose.yml の environment: セクションに反映されます。
+
+`.env.example`には以下の設定が含まれています：
+
+- **MySQLコンテナ設定**: `MYSQL_ROOT_PASSWORD`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
+- **phpMyAdmin設定**: `PMA_PORT`
+
+この`.env`ファイルの内容は`docker-compose.yml`の`environment:`セクションに反映されます。
+
+MySQLコンテナの初回起動時に、以下の処理が自動実行されます：
+- `DB_DATABASE`で指定したデータベース（初期値: `habit_rpg`）が自動作成されます
+- `DB_USERNAME`で指定したユーザー（初期値: `habit_rpg`）が自動作成され、そのデータベースへの全権限が付与されます
 
 ### 2. Docker イメージのビルドと起動
 
